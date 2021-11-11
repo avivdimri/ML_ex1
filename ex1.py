@@ -47,17 +47,14 @@ def cal_new_z(clusters,old_z):
 
 image_fname,centroids_fname,out_fname = sys.argv[1],sys.argv[2],sys.argv[3]
 z= np.loadtxt(centroids_fname)
-
+if z.ndim == 1:
+    z = z.reshape(-1,3)
 orig_pixels = plt.imread(image_fname)
 pixels = orig_pixels.astype(float)/255.
 pixels = pixels.reshape(-1,3)
 f = open(out_fname, "w+")
-# x_axis=[]
-# y_axis=[]
 for i in range(0,20):
     clusters,cost = get_clusters(pixels, z)
-    # y_axis.append(cost)
-    # x_axis.append(i)
     new_z = cal_new_z(clusters,z)
     new_z = np.asarray(new_z)
     f.write(f"[iter {i}]:{','.join([str(i) for i in new_z])}\n")
@@ -65,9 +62,4 @@ for i in range(0,20):
         break;
     z = new_z
 f.close()
-# plt.plot(x_axis,y_axis,marker="o")
-# plt.xlabel("iterations")
-# plt.ylabel("total loss")
-# plt.title(f"k={len(z)}")
-# plt.show()
 
